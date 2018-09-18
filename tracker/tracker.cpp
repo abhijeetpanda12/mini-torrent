@@ -29,23 +29,6 @@ int main(int argc, char const *argv[])
     string seederlist_file = argv[2];
     string log_file = argv[3];
 
-    // check
-    string h = "aa9a37871ebe5298e34cb609d87f00546a1481a45";
-    // string ipp = "127.0.0.1:8080";
-    // share_file(seederlist_file,ipp,h);
-    // remove_entry(seederlist_file,h);
-    // vector <string> res = fetch_entry(seederlist_file,h);
-    // cout<<"results"<<endl;
-    // for (int i = 0; i < res.size(); ++i)
-    // {
-    //     cout<<">>>"<<res[i]<<"<<<"<<endl;
-    //     /* code */
-    // }
-    return 0;
-
-
-
-
     // create socket
     int sockfd, newsockfd, portno, n;
     char buff[255];
@@ -97,14 +80,42 @@ int main(int argc, char const *argv[])
 
 
     // process request
+    /*
+    fetch hash ====> vector<string>
+    share IP:PORT hash file_name
+    remove hash
+    */
     string message;
     vector<string> req = split_str(s);
-    if(req[0].compare("fetch")==0)
-        message = "got a fetch request";
-    else if(req[0].compare("share")==0)
-        message = "got a share request";
-    else if(req[0].compare("remove")==0)
-        message = "got a remove request";
+    if(req[0].compare("fetch")==0){
+            // message = "got a fetch request";
+        if(req.size()<1)
+            message="Usage : fetch hash";
+        else{
+            vector<string> msg = fetch_entry(seederlist_file, req[1]);
+            for (int i = 0; i < msg.size(); ++i)
+                {
+                    message = message + msg[i] + ";";
+                    /* code */
+                }
+            }
+        }
+    else if(req[0].compare("share")==0){
+            if(req.size()<3)
+                message="Usage : share IP:PORT hash file_name";
+            else{
+                share_file(seederlist_file, req[1], req[2],req[3]);
+                message="DONE! share";
+                }
+        }
+    else if(req[0].compare("remove")==0){
+            if(req.size()<1)
+                message="Usage : remove hash";
+            else{
+                remove_entry(seederlist_file,req[1]);
+                message="DONE! remove";
+            }
+        }
     else
         message = "Invalid Request";
 

@@ -11,10 +11,10 @@ vector<string> split_str(string s){
 
     return c;
 }
-void share_file(string seeder_file,string ip, string hash){
+void share_file(string seeder_file, string ip, string hash, string name){
     ofstream seedr;
     seedr.open(seeder_file, ios_base::app);
-    seedr<<ip<<"\t"<<hash<<endl;
+    seedr<<ip<<"\t"<<hash<<"\t"<<name<<endl;
     seedr.close();
 }
 
@@ -48,7 +48,7 @@ vector<string> fetch_entry(string seeder_file, string entry){
         size_t pos =0;
         pos = line.find(entry);
         if(pos != std::string::npos){
-            line.replace(pos-1,entry.length()+1,"");
+            line.replace(pos-1,string::npos,"");
             v.push_back(line);
         }
     }

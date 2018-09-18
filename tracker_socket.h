@@ -1,3 +1,18 @@
+vector<string> split_str_semi(string s){
+    vector<string> c;
+    size_t pos = 0;
+    string token;
+    while ((pos = s.find(";")) != std::string::npos) {
+        token = s.substr(0, pos);
+        c.push_back(token);
+        s.erase(0, pos + 1);
+    }
+    c.push_back(s);
+
+    return c;
+}
+
+
 string send_tracker(string message, string ip, int portno)
 {
     int sockfd, newsockfd, n;
@@ -49,21 +64,30 @@ string send_tracker(string message, string ip, int portno)
 void test_socket(string ip, int port){
     // cout<<"IP : "<<ip<<endl;
     // cout<<"PORT : "<<port<<endl;
-    string msg = send_tracker("fetch me the boy", ip, port);
-    cout<<"GOT : "<<msg<<endl;
-    cout<<"NEW message"<<endl;
+    //working
+    // string msg = send_tracker("fetch aa9a37871ebe5298e34cb609d87f4546a1481a45", ip, port);
+    // cout<<"GOT : "<<msg<<endl;
+    // cout<<"NEW message"<<endl;
+    // vector<string> v = split_str_semi(msg);
+    // for (int i = 0; i < v.size(); ++i)
+    // {
+    //     cout<<v[i]<<endl;
+    // }
 
-    msg = send_tracker("share me the boy", ip, port);
-    cout<<"GOT : "<<msg<<endl;
-    cout<<"NEW message"<<endl;
+    //working
+    // string msg = send_tracker("share "+ip+" "+"aa9a37871ebe5298e34cb609d87f4546a1481a45"+" "+"a.txt", ip, port);
+    // cout<<"GOT : "<<msg<<endl;
+    // cout<<"NEW message"<<endl;
 
-    msg = send_tracker("remove me the boy", ip, port);
-    cout<<"GOT : "<<msg<<endl;
-    cout<<"NEW message"<<endl;
+    //working
+    // string msg = send_tracker("remove aa9a37871ebe5298e34cb609d87f01546a1481a45", ip, port);
+    // cout<<"GOT : "<<msg<<endl;
+    // cout<<"NEW message"<<endl;
 
-    msg = send_tracker("get me the boy", ip, port);
-    cout<<"GOT : "<<msg<<endl;
-    cout<<"NEW message"<<endl;
+    //working
+    // string msg = send_tracker("get me the boy", ip, port);
+    // cout<<"GOT : "<<msg<<endl;
+    // cout<<"NEW message"<<endl;
 
 }
 
