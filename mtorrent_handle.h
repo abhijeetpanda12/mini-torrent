@@ -13,14 +13,17 @@ string create_sha1_string(string s){
     return h;
 }
 
-int create_m_torrent(string file_path, string filename){
+int create_m_torrent(string file_path, string filename, string ip,int port, string ip_port){
+    /*
+    the listen port is different for the clients. change it while sending to server. dont send server listen port.
+    */
     unsigned char hash[SHA_DIGEST_LENGTH];
     ifstream ff(file_path);
     int count=0;
     string h="";
     while (ff)
     {
-        char cc [1000000];
+        char cc [1048576];//1048576 = 1024x1024 bytes
         ff.read(cc, sizeof(cc));
         unsigned char* c = reinterpret_cast<unsigned char*>(cc);
         char buff[4];
@@ -39,7 +42,16 @@ int create_m_torrent(string file_path, string filename){
     mtor<<file_path<<endl;
     mtor<<h;
     mtor.close();
+
     cout<<"File Split into "<<count<<" pieces."<<endl;
+
+
+    // share to tracker
+    string hsh = create_sha1_string(h);
+    string message = "share "+ip_port+" "+hsh+" "+file_path;
+    cout<<"IP : "<<ip<<endl;
+    cout<<"msg : "<<message<<endl;
+    string msg = send_tracker(message, ip, port);
     return 0;
 }
 

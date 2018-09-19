@@ -12,8 +12,9 @@
 #include <netdb.h>
 using namespace std;
 
-#include "mtorrent_handle.h"
+
 #include "tracker_socket.h"
+#include "mtorrent_handle.h"
 
 vector<string> get_command();
 
@@ -56,7 +57,7 @@ int main(int argc, char const *argv[])
             if (command.size()<3)
                 cout<<"Usage : share <local file path> <filename>"<<endl;
             else{
-                if (create_m_torrent(command[1],command[2])!=0)
+                if (create_m_torrent(command[1],command[2],ip,port,client_ip_port)!=0)
                     cout<<"Error in sharing the file";
             }
         }
@@ -67,8 +68,13 @@ int main(int argc, char const *argv[])
             else{
                 string hash = get_sha1(command[1]);
                 cout<<"HASH : "<<hash<<endl;
-                string recv_ip = get_ip_from_file(command[1], hash);
-                cout<<"File Source IP : "<<recv_ip<<endl;
+                string recv_ip = get_ip_of_file(hash,ip,port);
+                vector<string> v = split_str_semi(recv_ip);
+                for (int i = 0; i < v.size(); ++i)
+                {
+                    cout<<"File Source IP : "<<v[i]<<endl;
+                }
+                // cout<<recv_ip<<endl;
             }
         }
         else if (command[0].compare("test")==0){

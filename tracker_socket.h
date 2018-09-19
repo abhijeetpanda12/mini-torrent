@@ -92,8 +92,10 @@ void test_socket(string ip, int port){
 }
 
 
-string get_ip_from_file(string file, string hash){
-    // string msg = send_tracker("HI", ip, port);
-    // cout<<"recieved : ";
-    return "hi";
+string get_ip_of_file(string hash, string ip, int port){
+    string message = "fetch "+hash;
+    string msg = send_tracker(message, ip, port);
+    cout<<"GOT : "<<msg<<endl;
+    cout<<"NEW message"<<endl;
+    return msg;
 }
