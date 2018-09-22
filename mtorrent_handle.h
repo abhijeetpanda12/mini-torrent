@@ -24,6 +24,7 @@ int create_m_torrent(string file_path, string filename, string ip,int port, stri
     while (ff)
     {
         char cc [1048576];//1048576 = 1024x1024 bytes
+        memset(cc,0,sizeof(cc));
         ff.read(cc, sizeof(cc));
         unsigned char* c = reinterpret_cast<unsigned char*>(cc);
         char buff[4];

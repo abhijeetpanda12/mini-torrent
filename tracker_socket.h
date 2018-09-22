@@ -12,6 +12,19 @@ vector<string> split_str_semi(string s){
     return c;
 }
 
+vector<string> split_str_pipe(string s){
+    vector<string> c;
+    size_t pos = 0;
+    string token;
+    while ((pos = s.find("|")) != std::string::npos) {
+        token = s.substr(0, pos);
+        c.push_back(token);
+        s.erase(0, pos + 1);
+    }
+    c.push_back(s);
+
+    return c;
+}
 
 string send_tracker(string message, string ip, int portno)
 {

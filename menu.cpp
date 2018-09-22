@@ -10,11 +10,15 @@
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <netdb.h>
+#include <thread>
+#include <set>
 using namespace std;
 
 
 #include "tracker_socket.h"
 #include "mtorrent_handle.h"
+#include "client_server.h"
+#include "get_client.h"
 
 vector<string> get_command();
 
@@ -25,22 +29,42 @@ int main(int argc, char const *argv[])
         cout<<"Usage ​./client <CLIENT_IP>:<UPLOAD_PORT> <TRACKER_IP_1>:<TRACKER_PORT_1> <TRACKER_IP_2>:<TRACKER_PORT_2> <log_file>"<<endl;
         exit(1);
     }
-
-
-    // GET the IP and PORT NO
+    // GET the tracker IP and PORT
+    // client upload port
     string client_ip_port = argv[1];
+    string client_ip;
+    int client_port;
+    size_t client_pos = client_ip_port.find(":");
+    if(client_pos!=std::string::npos){
+        string temp = client_ip_port.substr(client_pos+1);
+        client_port = stoi(temp);
+        client_ip = client_ip_port.substr(0,client_pos);
+    }else{
+            cout<<"Invalid IP and PORT NO"<<endl;
+            return 0;
+        }
+
+    //tracker 1
+    string tracker_ip_port = argv[2];
     string ip;
     int port;
-    size_t pos = client_ip_port.find(":");
+    size_t pos = tracker_ip_port.find(":");
     if(pos!=std::string::npos){
-        string temp = client_ip_port.substr(pos+1);
+        string temp = tracker_ip_port.substr(pos+1);
         port = stoi(temp);
-        ip = client_ip_port.substr(0,pos);
-    }else
-        cout<<"Invalid IP and PORT NO"<<endl;
+        ip = tracker_ip_port.substr(0,pos);
+    }else{
+            cout<<"Invalid IP and PORT NO"<<endl;
+            return 0;
+        }
+
+    // tracker 2
+
+    //log file
+    string log_file = argv[4];
     // cout<<ip<<endl;
     // cout<<port;
-    // cout<<client_ip_port;
+    // cout<<tracker_ip_port;
 
     /* MENU
         1. Sharing a Local File.
@@ -49,6 +73,11 @@ int main(int argc, char const *argv[])
         4. Removing a Shared File.
         5. Close application.
     */
+    // open the listen server for sending files
+    thread t_c_server(file_request_handler, client_ip, client_port, log_file);
+    t_c_server.detach();
+
+    // menu driven interface
     vector<string> command;
     while(1){
         command = get_command();
@@ -70,9 +99,20 @@ int main(int argc, char const *argv[])
                 cout<<"HASH : "<<hash<<endl;
                 string recv_ip = get_ip_of_file(hash,ip,port);
                 vector<string> v = split_str_semi(recv_ip);
+                set<string> s( v.begin(), v.end() );
+                v.assign( s.begin(), s.end() );
+                v.erase(v.begin());
+                cout<<v.size()<<endl;
                 for (int i = 0; i < v.size(); ++i)
                 {
                     cout<<"File Source IP : "<<v[i]<<endl;
+                }
+                bool flag=false;
+                while(!flag){
+                vector<string> ip_name = split_str_pipe(v[0]);// change v[0]
+                cout<<ip_name[0]<<endl<<ip_name[1]<<endl;
+                get_file(ip_name[0], ip_name[1], command[2]);
+                flag=true;
                 }
                 // cout<<recv_ip<<endl;
             }
@@ -86,9 +126,18 @@ int main(int argc, char const *argv[])
         }
         else if (command[0].compare("remove")==0){
             cout<<"Do a remove"<<endl;
+            if (command.size()<2)
+                cout<<"Usage : remove <path to .mtorrent file>"<<endl;
+            else{
+                string hsh = get_sha1(command[1]);
+                send_tracker("remove "+hsh, ip, port);
+            }
+
         }
         else if (command[0].compare("quit")==0){
             cout<<"Quitting!"<<endl;
+            if(t_c_server.joinable())
+                t_c_server.join();
             return 0;
         }
         else

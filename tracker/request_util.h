@@ -33,7 +33,7 @@ void request_handler(int newsockfd, string seederlist_file){
                 message="Usage : share IP:PORT hash file_name";
             else{
                 share_file(seederlist_file, req[1], req[2],req[3]);
-                sleep(10);
+                // sleep(10);
                 message="DONE! share";
                 }
         }
