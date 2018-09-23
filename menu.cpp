@@ -79,6 +79,7 @@ int main(int argc, char const *argv[])
 
     // menu driven interface
     vector<string> command;
+    vector<string> downloaded;
     while(1){
         command = get_command();
         if (command[0].compare("share")==0){
@@ -113,6 +114,7 @@ int main(int argc, char const *argv[])
                 cout<<ip_name[0]<<endl<<ip_name[1]<<endl;
                 get_file(ip_name[0], ip_name[1], command[2]);
                 flag=true;
+                downloaded.push_back(command[2]);
                 }
                 // cout<<recv_ip<<endl;
             }
@@ -123,6 +125,11 @@ int main(int argc, char const *argv[])
         }
         else if (command[0].compare("show")==0 && command[1].compare("downloads")==0){
             cout<<"showing downloads"<<endl;
+            for (int i = 0; i < downloaded.size(); ++i)
+            {
+                /* code */
+                cout<<downloaded[i]<<endl;
+            }
         }
         else if (command[0].compare("remove")==0){
             cout<<"Do a remove"<<endl;
