@@ -83,7 +83,8 @@ int main(int argc, char const *argv[])
 
     // menu driven interface
     vector<string> command;
-    vector<string> downloaded;
+    string db_file="file_list.txt";
+
     while(1){
         command = get_command();
         if (command[0].compare("share")==0){
@@ -118,8 +119,10 @@ int main(int argc, char const *argv[])
                 cout<<ip_name[0]<<endl<<ip_name[1]<<endl;
                 get_file(ip_name[0], ip_name[1], command[2]);
                 flag=true;
-                downloaded.push_back(command[2]);
                 }
+                ofstream file_db(db_file);
+                file_db<<command[2]<<endl;
+                file_db.close();
                 // cout<<recv_ip<<endl;
             }
         }
@@ -129,11 +132,12 @@ int main(int argc, char const *argv[])
         }
         else if (command[0].compare("show")==0 && command[1].compare("downloads")==0){
             cout<<"showing downloads"<<endl;
-            for (int i = 0; i < downloaded.size(); ++i)
-            {
-                /* code */
-                cout<<downloaded[i]<<endl;
+            string file;
+            ifstream file_db(db_file);
+            while(getline(file_db,file)){
+                cout<<"[S]"<<file<<endl;
             }
+            file_db.close();
         }
         else if (command[0].compare("remove")==0){
             cout<<"Do a remove"<<endl;
