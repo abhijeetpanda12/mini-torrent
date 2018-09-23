@@ -27,7 +27,7 @@ int create_m_torrent(string file_path, string filename, string ip,int port, stri
     string h="";
     while (ff)
     {
-        char cc [1048576];//1048576 = 1024x1024 bytes
+        char cc [102400];//1048576 = 1024x1024 bytes
         memset(cc,0,sizeof(cc));
         ff.read(cc, sizeof(cc));
         unsigned char* c = reinterpret_cast<unsigned char*>(cc);
@@ -41,7 +41,7 @@ int create_m_torrent(string file_path, string filename, string ip,int port, stri
     }
 
     ff.close();
-    ofstream mtor(filename+".mtorrent");
+    ofstream mtor(filename);
     mtor<<"trackerIP:port"<<endl;
     mtor<<"trackerIP:port"<<endl;
     mtor<<file_path<<endl;
