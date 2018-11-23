@@ -1,10 +1,4 @@
 # Mini-Torrent
-This repository is the final submission to my Operating Systems Assignment -2.
-```
-Name : Abhijeet Panda
-Roll No : 2018201044
-```
-Submission Deadline : 23rd September, 2018
 
 The focus of this Assignment is to implement a functional torrent system including our own tracker system.
 
